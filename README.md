@@ -1,86 +1,84 @@
 # 🚗 Vehicle Fleet Performance Dashboard
 
-An interactive Streamlit dashboard for analyzing and visualizing vehicle fleet performance using Python, Pandas, and Plotly.
-Ideal for fleet managers, automotive analysts, or data enthusiasts seeking operational insights and cost efficiency from fleet data.
+An **interactive Streamlit dashboard** for analyzing and visualizing **vehicle fleet performance** using **Python**, **Pandas**, and **Plotly**.  
+Built for **fleet managers**, **automotive analysts**, and **data enthusiasts** who want actionable insights into fleet operations, efficiency, and costs.  
 
-This project demonstrates modern data analytics, interactive visualization, and dynamic filtering — all in a responsive web interface.
+This project demonstrates end-to-end **data analytics**, **interactive visualization**, and **dynamic filtering** - all in a modern, web-based dashboard.
 
-──────────────────────────────────────────────
-🛠️ FEATURES
-──────────────────────────────────────────────
+---
 
-🎯 CORE FUNCTIONALITY
-• Dynamic Filters – filter data by Brand, Vehicle Type, Driver, and Month
-• KPI Cards – Total Vehicles, Total Mileage (km), Total Fuel Used (L), Total Trips
+## 🧭 Overview
 
-📊 INTERACTIVE VISUALIZATIONS
-• Vehicles by Type – distribution of fleet composition
-• Mileage by Brand – total mileage comparison
-• Monthly Trends – mileage & fuel usage over time
-• Mileage vs. Fuel Usage – scatter plot for efficiency analysis
-• Fuel Efficiency per Driver – compare driving performance
-• Maintenance Cost per Model – identify cost-intensive vehicles
-• Trips per Route – analyze route activity
-• Correlation Heatmap – explore metric relationships
+The **Vehicle Fleet Performance Dashboard** allows you to:
 
-💡 ANALYTICAL ENHANCEMENTS
-• Automated Insights – top brand, most efficient vehicle, avg cost/km
-• Cost Efficiency Metrics – operational cost per km (fuel + maintenance)
+- Monitor key operational metrics in real time  
+- Identify top-performing vehicles, brands, and drivers  
+- Analyze fuel efficiency, maintenance costs, and trip routes  
+- Export filtered data for deeper analysis or reporting  
 
-🧭 USER EXPERIENCE
-• Tabbed Layout – Overview | Visualizations | Maintenance & Costs | Data Export
-• Data Export – download filtered datasets (CSV)
-• Caching Enabled – optimized with @st.cache_data
-• Responsive Design – adapts to all screen sizes
+---
 
-──────────────────────────────────────────────
-📊 TECHNOLOGIES USED
-──────────────────────────────────────────────
+## 🛠️ Features
 
-• Python 3.13+
-• Pandas
-• Plotly Express
-• Streamlit
-• NumPy
-• openpyxl, xlsxwriter
+### 🎯 **Core Functionality**
+- 🔍 Dynamic sidebar filters for:
+  - `Brand`
+  - `Vehicle Type`
+  - `Driver`
+  - `Month`
+- 🧾 Real-time **KPI cards**:
+  - **Total Vehicles**
+  - **Total Mileage (km)**
+  - **Total Fuel Used (L)**
+  - **Total Trips**
 
-──────────────────────────────────────────────
-🚀 HOW IT WORKS
-──────────────────────────────────────────────
+---
 
-1️⃣ Prepare your dataset:
-   The file should be named automotive_data.xlsx and placed in the same directory.
+### 📊 **Interactive Visualizations**
 
-2️⃣ Run the dashboard:
-   streamlit run automotive_dashboard.py
+| Visualization | Description |
+|----------------|-------------|
+| 🚙 **Vehicles by Type** | Distribution of fleet composition |
+| 🏁 **Mileage by Brand** | Compare mileage across brands |
+| 📅 **Monthly Trends** | Track mileage and fuel usage over time |
+| ⛽ **Mileage vs Fuel Usage** | Analyze fuel efficiency relationships |
+| 👨‍✈️ **Fuel Efficiency per Driver** | Identify top-performing drivers |
+| 🔧 **Maintenance Cost per Model** | Find cost-intensive vehicle models |
+| 🚉 **Trips per Route** | Visualize route-level activity |
+| 🧩 **Correlation Heatmap** | Explore relationships between core metrics |
 
-3️⃣ Explore:
-   - Apply sidebar filters
-   - View KPIs and charts
-   - Analyze cost and efficiency metrics
-   - Export filtered results
+---
 
-──────────────────────────────────────────────
-⚙️ PROJECT STRUCTURE
-──────────────────────────────────────────────
+### 💡 **Analytical Enhancements**
+- 📈 **Automated Insights**  
+  Get instant insights like:
+  - Top brand by total mileage  
+  - Most fuel-efficient vehicle  
+  - Average cost per km  
 
-📁 vehicle-fleet-dashboard/
-├── automotive_dashboard.py    → main Streamlit app
-├── automotive_data.xlsx       → sample dataset
-├── requirements.txt           → dependencies
-└── README.md                  → documentation
+- 💰 **Cost Efficiency Metrics**  
+  Calculates **total operational cost per km** (fuel + maintenance).
 
-──────────────────────────────────────────────
-⚡ FUTURE IMPROVEMENTS
-──────────────────────────────────────────────
+---
 
-• Predictive analytics for fleet performance
-• AI-based efficiency recommendations
-• Real-time IoT / telematics data integration
-• PDF or Excel report exports
-• Dark mode and customizable UI themes
+### 🧭 **User Experience**
+- 🗂️ **Tabbed Layout**:
+  - `Overview`
+  - `Visualizations`
+  - `Maintenance & Costs`
+  - `Data Export`
+- ⚡ **Instant Data Export** as CSV  
+- 🚀 **Caching with `@st.cache_data`** for performance  
+- 📱 **Responsive Layout** for desktop and mobile  
 
-──────────────────────────────────────────────
-📸 SCREENSHOTS
-──────────────────────────────────────────────
-Coming soon — examples of KPIs, trends, and heatmaps.
+---
+
+## ⚙️ Technologies Used
+
+| Category | Technology |
+|-----------|-------------|
+| **Language** | Python 3.13+ |
+| **Data Handling** | Pandas, NumPy |
+| **Visualization** | Plotly Express |
+| **Web Framework** | Streamlit |
+| **File Handling** | openpyxl, xlsxwriter |
