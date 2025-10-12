@@ -1,105 +1,86 @@
-🚗 Vehicle Fleet Performance Dashboard
+# 🚗 Vehicle Fleet Performance Dashboard
 
-An interactive web-based dashboard built with Python, Pandas, and Streamlit, designed to analyze and visualize vehicle fleet performance metrics.
-Ideal for fleet managers, automotive analysts, and data enthusiasts who want to explore insights from real-world operational data.
+An interactive Streamlit dashboard for analyzing and visualizing vehicle fleet performance using Python, Pandas, and Plotly.
+Ideal for fleet managers, automotive analysts, or data enthusiasts seeking operational insights and cost efficiency from fleet data.
 
-This project showcases practical data analytics, interactive visualization, and efficient data filtering — all in one streamlined, modern dashboard.
+This project demonstrates modern data analytics, interactive visualization, and dynamic filtering — all in a responsive web interface.
 
-🛠️ Features
-🎯 Core Functionality
+──────────────────────────────────────────────
+🛠️ FEATURES
+──────────────────────────────────────────────
 
-Dynamic Filters – instantly filter data by Brand, Vehicle Type, Driver, and Month.
+🎯 CORE FUNCTIONALITY
+• Dynamic Filters – filter data by Brand, Vehicle Type, Driver, and Month
+• KPI Cards – Total Vehicles, Total Mileage (km), Total Fuel Used (L), Total Trips
 
-Key Metrics (KPI Cards) – display real-time fleet stats:
+📊 INTERACTIVE VISUALIZATIONS
+• Vehicles by Type – distribution of fleet composition
+• Mileage by Brand – total mileage comparison
+• Monthly Trends – mileage & fuel usage over time
+• Mileage vs. Fuel Usage – scatter plot for efficiency analysis
+• Fuel Efficiency per Driver – compare driving performance
+• Maintenance Cost per Model – identify cost-intensive vehicles
+• Trips per Route – analyze route activity
+• Correlation Heatmap – explore metric relationships
 
-Total vehicles
+💡 ANALYTICAL ENHANCEMENTS
+• Automated Insights – top brand, most efficient vehicle, avg cost/km
+• Cost Efficiency Metrics – operational cost per km (fuel + maintenance)
 
-Total mileage
+🧭 USER EXPERIENCE
+• Tabbed Layout – Overview | Visualizations | Maintenance & Costs | Data Export
+• Data Export – download filtered datasets (CSV)
+• Caching Enabled – optimized with @st.cache_data
+• Responsive Design – adapts to all screen sizes
 
-Total fuel used
+──────────────────────────────────────────────
+📊 TECHNOLOGIES USED
+──────────────────────────────────────────────
 
-Total trips
+• Python 3.13+
+• Pandas
+• Plotly Express
+• Streamlit
+• NumPy
+• openpyxl, xlsxwriter
 
-📊 Data Visualization
+──────────────────────────────────────────────
+🚀 HOW IT WORKS
+──────────────────────────────────────────────
 
-Vehicles by Type – histogram of fleet distribution.
+1️⃣ Prepare your dataset:
+   The file should be named automotive_data.xlsx and placed in the same directory.
 
-Total Mileage by Brand – compare brand performance.
+2️⃣ Run the dashboard:
+   streamlit run automotive_dashboard.py
 
-Monthly Trends – line chart of mileage and fuel usage over time.
+3️⃣ Explore:
+   - Apply sidebar filters
+   - View KPIs and charts
+   - Analyze cost and efficiency metrics
+   - Export filtered results
 
-Mileage vs. Fuel Usage – scatter plot for identifying efficiency outliers.
+──────────────────────────────────────────────
+⚙️ PROJECT STRUCTURE
+──────────────────────────────────────────────
 
-Average Fuel Efficiency per Driver – detect the most fuel-efficient drivers.
+📁 vehicle-fleet-dashboard/
+├── automotive_dashboard.py    → main Streamlit app
+├── automotive_data.xlsx       → sample dataset
+├── requirements.txt           → dependencies
+└── README.md                  → documentation
 
-Maintenance Cost per Model – identify costly vehicles.
+──────────────────────────────────────────────
+⚡ FUTURE IMPROVEMENTS
+──────────────────────────────────────────────
 
-Trips per Route – visualize route activity levels.
+• Predictive analytics for fleet performance
+• AI-based efficiency recommendations
+• Real-time IoT / telematics data integration
+• PDF or Excel report exports
+• Dark mode and customizable UI themes
 
-Correlation Heatmap – explore relationships between mileage, fuel, maintenance, and trips.
-
-💡 Analytical Enhancements
-
-Automated Insights – dynamically generated key takeaways (e.g., top-performing brand, most fuel-efficient vehicle, average cost per km).
-
-Cost Efficiency Metrics – calculate and display total operating cost per km, including estimated fuel costs.
-
-🧭 User Experience
-
-Tabbed Layout – cleanly organized sections:
-
-Overview
-
-Visualizations
-
-Maintenance & Costs
-
-Data Export
-
-Data Export – download filtered data instantly as a CSV file.
-
-Caching for Speed – optimized with @st.cache_data for faster loading.
-
-Responsive Design – fully adaptive charts and layout for all devices.
-
-📊 Technologies Used
-
-Python 3.13+
-
-Pandas – for data manipulation
-
-Plotly – for rich, interactive data visualizations
-
-Streamlit – for intuitive web app development
-
-Open-source libraries: numpy, xlsxwriter, openpyxl
-
-🚀 How It Works
-
-Load your Excel dataset (automotive_data.xlsx) with fleet information.
-
-Use sidebar filters to refine data by Brand, Vehicle Type, Driver, or Month.
-
-View key performance indicators (KPIs) in the Overview tab.
-
-Explore detailed visualizations across various operational metrics.
-
-Analyze cost and maintenance efficiency using financial insights.
-
-Export filtered data directly from the dashboard for reporting or further analysis.
-
-📈 Screenshots
-
-(Coming soon — visuals of key sections like KPIs, efficiency charts, and heatmaps.)
-
-⚡ Future Improvements
-
-🔮 Predictive analytics for vehicle performance and maintenance forecasting.
-
-🧠 AI-driven efficiency insights – detect patterns and recommend cost-saving actions.
-
-📡 Real-time data integration from IoT devices or GPS systems.
-
-📤 Additional export options – generate PDF or Excel summary reports.
-
-🌈 Enhanced UI themes – customizable color palettes and dark mode.
+──────────────────────────────────────────────
+📸 SCREENSHOTS
+──────────────────────────────────────────────
+Coming soon — examples of KPIs, trends, and heatmaps.
