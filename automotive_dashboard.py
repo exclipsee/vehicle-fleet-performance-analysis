@@ -2,6 +2,15 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import numpy as np
+
+# Modeling imports
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import ElasticNetCV
+from sklearn.metrics import mean_squared_error, r2_score
 
 # ===========================
 # Page Configuration
@@ -55,7 +64,7 @@ st.markdown("Interactive dashboard for analyzing and optimizing your vehicle fle
 # ===========================
 # Tabs Layout
 # ===========================
-tab1, tab2, tab3, tab4 = st.tabs(["📊 Overview", "📈 Visualizations", "⚙️ Maintenance & Costs", "⬇️ Data Export"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Overview", "📈 Visualizations", "⚙️ Maintenance & Costs", "⬇️ Data Export", "🔮 Predictive Model"])
 
 # ===========================
 # TAB 1 - Overview (KPIs + Insights)
@@ -212,3 +221,118 @@ with tab4:
         file_name="filtered_vehicle_data.csv",
         mime="text/csv"
     )
+
+# ===========================
+# TAB 5 - Predictive Model
+# ===========================
+with tab5:
+    st.subheader("Predictive Model — Estimate Efficiency or Cost")
+
+    # Basic feature engineering (create more factors)
+    df_model = filtered_df.copy()
+    # avoid divide-by-zero
+    df_model["Total Trips"] = df_model["Total Trips"].replace(0, np.nan)
+    df_model["Avg Trip Distance (km)"] = df_model["Mileage (km)"] / df_model["Total Trips"]
+    df_model["Fuel per Trip (L)"] = df_model["Fuel Used (L)"] / df_model["Total Trips"]
+    df_model["Maintenance per km (€)"] = df_model["Maintenance Cost (€)"] / df_model["Mileage (km)"]
+    df_model["Month_Num"] = pd.to_datetime(df_model["Month"], errors="coerce").dt.month
+    # cyclic encoding for month
+    df_model["Month_sin"] = np.sin(2 * np.pi * (df_model["Month_Num"].fillna(0) / 12))
+    df_model["Month_cos"] = np.cos(2 * np.pi * (df_model["Month_Num"].fillna(0) / 12))
+
+    # Fill simple missing values
+    df_model["Avg Trip Distance (km)"].fillna(df_model["Avg Trip Distance (km)"].median(), inplace=True)
+    df_model["Fuel per Trip (L)"].fillna(df_model["Fuel per Trip (L)"].median(), inplace=True)
+    df_model["Maintenance per km (€)"].fillna(0, inplace=True)
+
+    target_option = st.selectbox("Select target", ["Efficiency (km/L)", "Cost per km (€)"])
+
+    st.markdown("Choose features to include in the model (keep it simple to avoid overfitting):")
+    candidate_features = [
+        "Mileage (km)", "Fuel Used (L)", "Total Trips",
+        "Avg Trip Distance (km)", "Fuel per Trip (L)", "Maintenance per km (€)",
+        "Month_sin", "Month_cos", "Brand", "Vehicle_Type", "Driver_Name", "Model"
+    ]
+
+    chosen = st.multiselect("Features", options=candidate_features, default=[
+        "Avg Trip Distance (km)", "Fuel per Trip (L)", "Maintenance per km (€)", "Brand", "Vehicle_Type"
+    ])
+
+    if len(chosen) == 0:
+        st.warning("Select at least one feature to train the model.")
+    else:
+        # Prepare data
+        model_df = df_model[[target_option] + chosen].dropna()
+
+        if model_df.shape[0] < 10:
+            st.warning("Not enough rows to train a reliable model. Try widening filters.")
+        else:
+            X = model_df[chosen]
+            y = model_df[target_option]
+
+            # identify numeric and categorical
+            numeric_feats = X.select_dtypes(include=[np.number]).columns.tolist()
+            categorical_feats = [c for c in chosen if c not in numeric_feats]
+
+            # Build preprocessing
+            numeric_transformer = Pipeline(steps=[("scaler", StandardScaler())])
+            categorical_transformer = Pipeline(steps=[
+                ("onehot", OneHotEncoder(handle_unknown="ignore", sparse=False))
+            ])
+
+            preprocessor = ColumnTransformer(transformers=[
+                ("num", numeric_transformer, numeric_feats),
+                ("cat", categorical_transformer, categorical_feats)
+            ], remainder="drop")
+
+            # ElasticNetCV to balance bias/variance (avoids overfitting vs underfitting)
+            model = Pipeline(steps=[
+                ("preproc", preprocessor),
+                ("clf", ElasticNetCV(l1_ratio=[0.1, 0.5, 0.9], cv=5, n_alphas=50, random_state=42))
+            ])
+
+            # Train/Test split
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            model.fit(X_train, y_train)
+
+            y_pred = model.predict(X_test)
+            rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+            r2 = r2_score(y_test, y_pred)
+
+            st.markdown("**Model Performance (test set)**")
+            st.write(f"RMSE: {rmse:.4f}")
+            st.write(f"R^2: {r2:.4f}")
+
+            # Plot actual vs predicted
+            try:
+                fig_pred = px.scatter(x=y_test, y=y_pred, labels={"x": "Actual", "y": "Predicted"}, title="Actual vs Predicted")
+                fig_pred.add_shape(type="line", x0=y_test.min(), x1=y_test.max(), y0=y_test.min(), y1=y_test.max(), line=dict(color="red", dash="dash"))
+                st.plotly_chart(fig_pred, use_container_width=True)
+            except Exception:
+                st.write("Could not render prediction plot.")
+
+            # Show important coefficients (for linear model)
+            try:
+                # get feature names after preprocessing
+                preproc = model.named_steps["preproc"]
+                # numeric names
+                feature_names = []
+                if numeric_feats:
+                    feature_names.extend(numeric_feats)
+                if categorical_feats:
+                    # OneHotEncoder categories
+                    ohe = preproc.named_transformers_["cat"].named_steps["onehot"]
+                    cat_names = ohe.get_feature_names_out(categorical_feats).tolist()
+                    feature_names.extend(cat_names)
+
+                coefs = model.named_steps["clf"].coef_
+                coef_df = pd.DataFrame({"feature": feature_names, "coef": coefs})
+                coef_df["abs_coef"] = coef_df["coef"].abs()
+                coef_df = coef_df.sort_values("abs_coef", ascending=False).head(20)
+                st.markdown("**Top feature coefficients**")
+                st.dataframe(coef_df.reset_index(drop=True))
+            except Exception:
+                st.write("Could not extract feature coefficients for display.")
+
+            st.markdown("---")
+            st.markdown("Tips: Selecting a moderate number of informative features and using the built-in ElasticNet regularization helps prevent both overfitting and underfitting. Try different feature combinations.")
