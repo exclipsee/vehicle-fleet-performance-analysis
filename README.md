@@ -82,3 +82,24 @@ The **Vehicle Fleet Performance Dashboard** allows you to:
 | **Visualization** | Plotly Express |
 | **Web Framework** | Streamlit |
 | **File Handling** | openpyxl, xlsxwriter |
+
+---
+
+## ✅ Tests
+
+This repository includes a small test suite for the modeling utilities.
+
+- Run tests locally (from project root):
+
+```powershell
+python -m pip install -r requirements.txt
+python -m pytest -q
+```
+
+- The tests cover basic feature engineering and the model pipeline in `model_utils.py`.
+
+## 🔮 Predictive Model (short)
+
+The Streamlit app includes a simple predictive tab that demonstrates feature engineering and a regularized linear model (ElasticNet). Use the dashboard to experiment with features and targets without modifying code.
+
+---
