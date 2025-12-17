@@ -79,27 +79,72 @@ The **Vehicle Fleet Performance Dashboard** allows you to:
 |-----------|-------------|
 | **Language** | Python 3.13+ |
 | **Data Handling** | Pandas, NumPy |
-| **Visualization** | Plotly Express |
-| **Web Framework** | Streamlit |
-| **File Handling** | openpyxl, xlsxwriter |
+# 🚗 Vehicle Fleet Performance Dashboard
+
+[![CI](https://github.com/exclipsee/vehicle-fleet-performance-analysis/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/exclipsee/vehicle-fleet-performance-analysis/actions/workflows/ci.yml)
+
+An interactive Streamlit dashboard for analyzing and visualizing vehicle fleet performance using Python, Pandas, and Plotly.
+
+This project helps fleet managers and analysts monitor efficiency, costs, and usage across a vehicle fleet using interactive visualizations and lightweight predictive tools.
 
 ---
 
-## ✅ Tests
+## Quick Start
 
-This repository includes a small test suite for the modeling utilities.
+1. Clone the repository:
 
-- Run tests locally (from project root):
+```powershell
+git clone https://github.com/exclipsee/vehicle-fleet-performance-analysis.git
+cd vehicle-fleet-performance-analysis
+```
+
+2. Create a virtual environment and install pinned dependencies:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
+
+3. Run the Streamlit app:
+
+```powershell
+streamlit run automotive_dashboard.py
+```
+
+---
+
+## Features (high level)
+
+- Interactive filters: Brand, Vehicle Type, Driver, Month
+- KPI cards: total vehicles, mileage, fuel used, trips
+- Visualizations: mileage by brand, monthly trends, efficiency scatter, maintenance costs
+- Predictive tab: simple feature engineering + ElasticNet model for estimating efficiency or cost
+
+---
+
+## Tests
+
+Run the test suite (unit tests cover the small modeling utilities):
 
 ```powershell
 python -m pip install -r requirements.txt
 python -m pytest -q
 ```
 
-- The tests cover basic feature engineering and the model pipeline in `model_utils.py`.
+---
 
-## 🔮 Predictive Model (short)
+## Contributing
 
-The Streamlit app includes a simple predictive tab that demonstrates feature engineering and a regularized linear model (ElasticNet). Use the dashboard to experiment with features and targets without modifying code.
+Feel free to open issues or PRs. Small ways to help:
+
+- Add dataset examples in `data/` for reproducibility
+- Improve tests or add CI matrix entries
+- Add a Dockerfile for a reproducible container
 
 ---
+
+## Notes
+
+- Dependencies are pinned in `requirements.txt` for reproducible installs.
+- CI runs tests on push/PR to `main` using GitHub Actions.
