@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  dashboard:
+    build: .
+    command: streamlit run automotive_dashboard.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./:/app:cached
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  overview:
+    build: .
+    command: streamlit run app.py --server.port 8502 --server.address 0.0.0.0
+    ports:
+      - "8502:8502"
+    volumes:
+      - ./:/app:cached
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  api:
+    build: .
+    command: uvicorn api.predict:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app:cached
+    environment:
+      - MODEL_PATH=/app/saved_models/latest_model.joblib
