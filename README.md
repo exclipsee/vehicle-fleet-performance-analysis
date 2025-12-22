@@ -148,3 +148,50 @@ Feel free to open issues or PRs. Small ways to help:
 
 - Dependencies are pinned in `requirements.txt` for reproducible installs.
 - CI runs tests on push/PR to `main` using GitHub Actions.
+
+---
+
+## Example Outputs
+
+Below are example commands and the kind of output you can expect when running the project locally.
+
+- Train a model and save it to the `saved_models/` folder:
+
+```powershell
+python train_model.py -i data/vehicle_fleet_data.csv -t "Mileage (km)" -o saved_models/latest_model.joblib
+```
+
+Expected printed output on success:
+
+```
+Model saved to: saved_models/latest_model.joblib
+```
+
+- Run the ingest pipeline to clean a CSV and write a cleaned file:
+
+```powershell
+python scripts/run_ingest.py data/vehicle_fleet_telemetry.csv -o data/cleaned_telemetry.csv
+```
+
+Expected printed output on success:
+
+```
+Ingest complete. Output: data/cleaned_telemetry.csv
+```
+
+- Example API prediction call (after training a model):
+
+```bash
+curl -X POST http://localhost:8000/predict -H "Content-Type: application/json" \
+  -d '{"features":[{"Avg Trip Distance (km)":50,"Month_sin":0.5,"Brand":"A"}]}'
+```
+
+Example response:
+
+```json
+{"predictions":[23.45]}
+```
+
+---
+
+If you'd like, I can add a short screenshot-style example notebook output saved to `docs/` or wire up a GitHub Action to build the Docker images and run tests automatically on push.
