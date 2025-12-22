@@ -1,9 +1,12 @@
+import os
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import ElasticNetCV
+import joblib
+from typing import Tuple
 
 
 def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -43,3 +46,22 @@ def build_pipeline(numeric_feats, categorical_feats):
     pre = ColumnTransformer([("num", num_pipe, numeric_feats), ("cat", cat_pipe, categorical_feats)], remainder="drop")
     pipe = Pipeline([("pre", pre), ("clf", ElasticNetCV(l1_ratio=[0.5], cv=3, n_alphas=10, random_state=42))])
     return pipe
+
+
+def train_and_save_model(X: pd.DataFrame, y: pd.Series, model_path: str) -> str:
+    """Train a pipeline on X/y and save the fitted model to `model_path`.
+
+    Returns the path to the saved model.
+    """
+    num, cat = split_numeric_categorical(X)
+    pipe = build_pipeline(num, cat)
+    pipe.fit(X, y)
+    folder = os.path.dirname(model_path) or "."
+    os.makedirs(folder, exist_ok=True)
+    joblib.dump(pipe, model_path)
+    return model_path
+
+
+def load_model(model_path: str):
+    """Load a saved model pipeline from `model_path`."""
+    return joblib.load(model_path)

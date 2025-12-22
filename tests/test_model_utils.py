@@ -40,3 +40,21 @@ def test_pipeline_fit_predict():
     preds = model.predict(X)
     assert preds.shape[0] == X.shape[0]
     assert np.isfinite(preds).all()
+
+
+def test_train_and_save_model(tmp_path):
+    df = sample_df()
+    out = engineer_features(df)
+    X = out[["Avg Trip Distance (km)", "Month_sin", "Brand"]]
+    y = out["Mileage (km)"]
+    model_path = tmp_path / "model.joblib"
+
+    from model_utils import train_and_save_model, load_model
+
+    saved = train_and_save_model(X, y, str(model_path))
+    assert saved == str(model_path)
+    assert model_path.exists()
+
+    mdl = load_model(str(model_path))
+    preds = mdl.predict(X)
+    assert preds.shape[0] == X.shape[0]
