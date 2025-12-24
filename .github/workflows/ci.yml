@@ -58,25 +58,53 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & push dashboard image
+      - name: Build & push dashboard image (sha + ref)
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}:dashboard-${{ github.sha }}
+          tags: |
+            ghcr.io/${{ github.repository }}:dashboard-${{ github.sha }}
+            ghcr.io/${{ github.repository }}:dashboard-${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build & push api image
+      - name: Tag dashboard as latest (main only)
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v4
         with:
           context: .
           file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository }}:api-${{ github.sha }}
+          tags: ghcr.io/${{ github.repository }}:dashboard-latest
+          cache-from: type=gha
+
+      - name: Build & push api image (sha + ref)
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}:api-${{ github.sha }}
+            ghcr.io/${{ github.repository }}:api-${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Tag api as latest (main only)
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/${{ github.repository }}:api-latest
+          cache-from: type=gha
 name: CI
 
 on:
