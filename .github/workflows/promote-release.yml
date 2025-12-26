@@ -1,0 +1,42 @@
+name: Promote release images
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  promote:
+    name: Promote tagged images to stable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set TAG env
+        run: echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Login to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Promote images (retag -> stable)
+        env:
+          IMAGE_BASE: ghcr.io/${{ github.repository }}
+          TAG: ${{ env.RELEASE_TAG }}
+        run: |
+          set -euo pipefail
+          echo "Promoting images for tag: $TAG"
+          for svc in dashboard api; do
+            SRC="$IMAGE_BASE:${svc}-$TAG"
+            DEST="$IMAGE_BASE:${svc}-stable"
+            echo "Attempting to pull $SRC"
+            docker pull "$SRC"
+            echo "Tagging $SRC -> $DEST"
+            docker tag "$SRC" "$DEST"
+            echo "Pushing $DEST"
+            docker push "$DEST"
+          done
